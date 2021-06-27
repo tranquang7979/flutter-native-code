@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
-project(native_code LANGUAGES CXX)
+project(batterylevel LANGUAGES CXX)
 
-set(BINARY_NAME "native_code")
+set(BINARY_NAME "batterylevel")
 
 cmake_policy(SET CMP0063 NEW)
 

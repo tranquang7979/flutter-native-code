@@ -23,20 +23,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _batteryLevel = -1;
+  static const platform = const MethodChannel('samples.flutter.dev/battery');
+
+  // Get battery level.
+  String _batteryLevel = 'Unknown battery level.';
 
   Future<void> _getBatteryLevel() async {
-    const platform = MethodChannel('course.flutter.dev/battery');
+    String batteryLevel;
     try {
-      final batteryLevel = await platform.invokeMethod('getBatteryLevel');
-      setState(() {
-        _batteryLevel = batteryLevel;
-      });
-    } on PlatformException catch (error) {
-      setState(() {
-        _batteryLevel = -1;
-      });
+      final int result = await platform.invokeMethod('getBatteryLevel');
+      batteryLevel = 'Battery level at $result % .';
+    } on PlatformException catch (e) {
+      batteryLevel = "Failed to get battery level: '${e.message}'.";
     }
+
+    setState(() {
+      _batteryLevel = batteryLevel;
+    });
   }
 
   @override
@@ -52,9 +55,13 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text('Baterry Loading: ...'),
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            ElevatedButton(
+              child: Text('Get Battery Level'),
+              onPressed: _getBatteryLevel,
+            ),
+            Text(_batteryLevel),
           ],
         ),
       ),
